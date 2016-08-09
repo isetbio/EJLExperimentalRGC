@@ -1,7 +1,7 @@
 function obj = irComputeSpikes(obj, varargin)
 % Computes the spiking rgcPhys mosaic responses to an input
 %
-%    ir = irComputeSpikes(ir, input, varargin)
+%    ir = irComputeSpikes(ir)
 %
 % Inputs:
 %   ir: inner retina object
@@ -29,13 +29,14 @@ function obj = irComputeSpikes(obj, varargin)
 % See also: rgcMosaic, irCompute, irComputeLinearSTSeparable
 %
 % JRG (c) isetbio team
+% 7/2016 updated
 
 % The superclass rgcCompute carries out convolution of the linear STRF:
 % obj = irCompute@ir(obj, outerSegment, varargin{:});
 
 fprintf('     \n');
 fprintf('Spike Generation:\n');
-tic;
+% tic;
 for cellTypeInd = 1:length(obj.mosaic)
     
     % Call Pillow code to compute spiking outputs for N trials    
@@ -45,7 +46,7 @@ for cellTypeInd = 1:length(obj.mosaic)
     
     clear spikeResponseFull spikeDrive psthResponse raster psth
 end
-toc;
+% toc;
 
 
 

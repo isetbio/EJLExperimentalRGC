@@ -1,4 +1,4 @@
-function obj = irCompute(obj, outerSegment, varargin)
+function obj = irCompute(obj, inputObj, varargin)
 % Computes the rgcPhys mosaic responses to an input
 %
 %    ir = irCompute(ir, input, varargin)
@@ -29,15 +29,16 @@ function obj = irCompute(obj, outerSegment, varargin)
 %  ir: the inner retina object with responses attached to each mosaic
 %
 % Example:
-%   ir.compute(identityOS);
-%   irCompute(ir,identityOS);
+%   ir.compute(bp);
+%   irCompute(ir, bp);
 %
 % See also: rgcMosaic, irComputeSpikes, irComputeLinearSTSeparable
 %
 % JRG (c) isetbio team
+% 7/2016 JRG updated
 
 % The superclass rgcCompute carries out convolution of the linear STRF:
-obj = irCompute@ir(obj, outerSegment, varargin{:});
+obj = irCompute@ir(obj, inputObj, varargin{:});
 
 fprintf('     \n');
 fprintf('Spike Generation:\n');
