@@ -31,7 +31,7 @@ dt = .1;
 
 rlen = length([.5+dt:dt:slen-1]');
 
-nbinsPerEval = 100;
+nbinsPerEval = 1/dt;
 nlfun = obj.generatorFunction;
 RefreshRate = 120.8;
 
@@ -50,7 +50,7 @@ rollcomp = [];
 
 tic
 for xcell = 1:nCells
-    rng(1);
+%     rng(1);
     
     % Set coupling filters
     for couplingFilterInd=1:6
@@ -63,10 +63,10 @@ for xcell = 1:nCells
     % Set generator function
     nlfun = obj.generatorFunction{xcell,1};
     if isa(nlfun,'function_handle')
-        cif0 = nlfun(reshape( repmat(Vstm, 10, 1) , 1 , slen*10)');
+        cif0 = nlfun(reshape( repmat(Vstm, nbinsPerEval, 1) , 1 , slen*nbinsPerEval)');
     else
         lnmodel = obj.generatorFunction{xcell,1};
-        cif0 = predict(lnmodel, reshape( repmat(Vstm, 10, 1) , 1 , slen*10)');
+        cif0 = predict(lnmodel, reshape( repmat(Vstm, nbinsPerEval, 1) , 1 , slen*nbinsPerEval)');
     end
         
     cif_psgain = exp(obj.postSpikeFilter{xcell});   
@@ -79,13 +79,13 @@ for xcell = 1:nCells
         cif_ps_cp       = cif0;
         binary_simulation = zeros(1,rlen);
         
-        pairspike = zeros(slen*10-190,6) ;
+        pairspike = zeros(slen*nbinsPerEval-190,6) ;
         
         for pair=1:6
             pairspike(pairspikecomp{xcell,pair,i_trial},pair) = 1;
         end
 
-        for i = 1 : slen*10-190%params.bins- max(cp_bins, ps_bins);
+        for i = 1 : slen*nbinsPerEval-190%params.bins- max(cp_bins, ps_bins);
             roll = rand(1);
             rollcomp(i_trial,i) = exp(-bindur*cif_ps_cp(i));
             if roll >  exp(-bindur*cif_ps_cp(i));

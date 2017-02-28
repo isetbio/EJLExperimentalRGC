@@ -1,9 +1,10 @@
-
 function [mosaicGLM, goodind] = glmLoad(cellType, varargin)
 % Load the parameters for an RGC mosaic measured in an experiment by the
 % Chichilnisky Lab, find the average values of each paramter and store a
 % mosaic with the average parameters in an isetbio object.
 %
+% See also cp_script for saving mosaicGLM files from fittedGLM.mat files.
+% 
 % JRG (c) 2016 isetbio team
 
 %% Parse inputs
@@ -66,6 +67,19 @@ switch ieParamFormat(cellType)
         rdt.crp('resources/data/rgc/apricot');
         data = rdt.readArtifact('mosaicGLM_apricot_sbc', 'type', 'mat');
         mosaicGLM = data.mosaicGLM;
+        
+    case{'prosthesisselective'}
+        load('/Users/james/Documents/MATLAB/isetbio misc/prosthesis_glm_fits/mosaicGLM_prosthesis_selective.mat')
+    case{'prosthesisonparasol'}
+%         load('/Users/james/Documents/MATLAB/isetbio misc/prosthesis_glm_fits/mosaicGLM/mosaicGLM_prosthesis_on_parasol.mat')
+        load('/Users/james/Documents/MATLAB/isetbio misc/prosthesis_glm_fits/mosaicGLM/mosaicGLM_prosthesis_on_parasol3.mat')
+    case{'prosthesisoffparasol'}
+%         load('/Users/james/Documents/MATLAB/isetbio misc/prosthesis_glm_fits/mosaicGLM/mosaicGLM_prosthesis_off_parasol.mat')
+        load('/Users/james/Documents/MATLAB/isetbio misc/prosthesis_glm_fits/mosaicGLM/mosaicGLM_prosthesis_off_parasol2.mat')
+    case{'prosthesisonmidget'}
+        load('/Users/james/Documents/MATLAB/isetbio misc/prosthesis_glm_fits/on_midget/mosaicGLM_prosthesis_on_midget.mat')
+
+        
     % 2013_08_19_6 data set, from NSEM paper
     case 'offparasol'
         rdt.crp('resources/data/rgc');

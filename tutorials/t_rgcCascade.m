@@ -28,7 +28,7 @@ clear
 
 experimentI   = 1;       % Choose dataset to load parameters and spikes
 cellTypeI     = 1;%:2    % Choose On Parasol (1) or Off Parasol (2)
-stimulusTestI = 1;%:2     % Choose WN test stimulus (1) or NSEM test stimulus (2)
+stimulusTestI = 2;%:2     % Choose WN test stimulus (1) or NSEM test stimulus (2)
     
 % Switch on the conditions indices
 % Experimental dataset
@@ -58,7 +58,7 @@ end
 
 
 % Length of WN movie is 1200, take nFrames to limit natural movie to same length
-nFrames = 1200; 
+nFrames = 3600; 
 testmovieshort = double(testmovie.matrix(:,:,1:nFrames)); 
 
 %% Upsample movie stimulus for os computation    
@@ -139,7 +139,9 @@ os = osLSub;
 
 bpParams.cellType = 'offDiffuse';
 % sets filter as theoretical, mean physiology, or individual phys:
-bpParams.filterType = 1; 
+% bpParams.filterType = 1; 
+bpParams.filterType = 3;
+bpParams.cellLocation = 10;
 % sets linear, on half-wave rectification, or on and off half-wave rect
 bpParams.rectifyType = 1;
 % bpParams.rectifyType = 3;
@@ -148,7 +150,7 @@ bpParams.rectifyType = 1;
 
 bp = bipolar(os, bpParams);
 bp.bipolarSet('sRFcenter',1);
-bp.bipolarSet('sRFcenter',1);
+bp.bipolarSet('sRFsurround',1);
 % bp.bipolarSet('sRFcenter',[0 0 0; 0 1 0; 0 0 0]);
 % bp.bipolarSet('sRFsurround',[0 0 0; 0 1 0; 0 0 0]);
 
@@ -256,7 +258,7 @@ innerRetinaRecordedPSTH = mosaicGet(innerRetinaRecorded.mosaic{1},'responsePsth'
 
 % Set the time and cell number
 tStart = 1.5;% 9%1.5;
-tEnd = 9;%21;%18%21;%1*8.5;
+tEnd = 30;%21;%18%21;%1*8.5;
 cellNum = 10;
 
 % Plot the original GLM prediction
@@ -266,7 +268,7 @@ subplot(312); hold on;
 % subplot(211); hold on;
 % irPlot(innerRetina,'raster','cell',[cellNum 1],'hold','on','color','r')
 irPlot(innerRetinaSU,'raster','cell',[cellNum 1],'hf',h1,'dt',0.1,'color','b');
-title(sprintf('Black Box, %s, off parasol cell [%d 1]',stimulusTest,cellNum));
+title(sprintf('Cascade Conv, %s, off parasol cell [%d 1]',stimulusTest,cellNum));
 set(gca,'fontsize',14);
 axis([tStart tEnd 0 nTrials]);
 % axis off
@@ -277,7 +279,7 @@ subplot(313); hold on;
 % subplot(212); hold on;
 % irPlot(innerRetinaSU,'raster','cell',[cellNum 1],'hold','on','color','b')
 irPlot(innerRetina,'raster','cell',[cellNum 1],'hf',h1,'dt',0.1,'color','r');
-title(sprintf('Cascade Conv, %s, off parasol cell [%d  1]',stimulusTest,cellNum));
+title(sprintf('Black Box, %s, off parasol cell [%d  1]',stimulusTest,cellNum));
 set(gca,'fontsize',14);
 % axis([tStart-.04 tEnd-.04 0 nTrials]); % when using theoretical irGLM
 % axis([tStart tEnd 0 nTrials]);
@@ -343,5 +345,5 @@ end
 title('PSTH')
 legend('Black Box','Recorded','Cascade Conv');
 grid on
-set(gca,'fontsize',6);
+set(gca,'fontsize',12);
 xlabel('Time (sec)'); ylabel('Response (spikes/sec)');

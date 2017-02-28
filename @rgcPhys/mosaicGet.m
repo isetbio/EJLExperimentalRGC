@@ -71,6 +71,7 @@ allowableFieldsToSet = {...
     'couplingFilter',...
     'couplingMatrix',...
     'lastspiketime',....
+    'spikes',...
     'responseRaster',...
     'responsePsth',...
     'responseVoltage',...
@@ -164,6 +165,51 @@ switch ieParamFormat(params.what)
         end
     case{'responseraster'}
         val = obj.responseRaster;
+  
+    case {'spikes'}
+        % cellCtr = 0;
+        % @JRG - Needs to be updated
+        dt = .1;%obj.dt;
+        maxTrials = obj.get('number trials');
+        nCells    = obj.get('mosaic size');
+        lastSpike = obj.get('last spike time');
+        spikes = zeros(nCells(1),nCells(2),ceil(lastSpike));
+        spikesCell = zeros(maxTrials,ceil(lastSpike/dt));
+        
+        for xcell = 1:nCells(1)
+            for ycell = 1:nCells(2)
+                clear spikeTimes spikesCell
+                % cellCtr = cellCtr+1;
+                
+                % Convert the time stamps in response spikes to a vector
+                % that has 0's and 1's at different times.  The number
+                % of times is 1 ms divided by dt, which appears to be 0.01
+                % milliseconds.  So, if there are, say, 500 ms in the
+                % stimulus there are 50,000 indices in y
+                % We need to speed this up and simplify if possible.
+                %
+                for trial = 1:maxTrials
+                    spikeTimes =  obj.responseSpikes{xcell,ycell,trial};
+                    if strcmpi(class(obj),'rgcphys')
+                        % For the rgc physiology in EJ's experiments, the
+                        % time base is 10 usec, not 1 ms
+                        spikeTimes = dt*spikeTimes;
+                    end;
+                    % Vector on a time base of dt with a 0 or 1 indicating
+                    % a spike or not.
+                    spikesCell(trial,ceil(spikeTimes./dt)) = 1;
+                end
+                
+                if size(spikesCell,1) > 1
+                    % More than one trial, sum across trials
+                    spikes(xcell,ycell,1:length(spikesCell)) = sum(spikesCell);
+                else
+                    spikes(xcell,ycell,1:length(spikesCell)) = spikesCell;
+                end
+                val = spikes;
+            end
+        end
+        
     case{'responsepsth'}
         if ~isempty(obj.responsePsth)
             val = obj.responsePsth;
